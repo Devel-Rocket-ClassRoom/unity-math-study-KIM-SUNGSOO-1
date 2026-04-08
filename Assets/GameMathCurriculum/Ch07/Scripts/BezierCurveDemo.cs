@@ -65,33 +65,68 @@ public class BezierCurveDemo : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+       if(useManualT)
+       {
+            currentT = manualT;
+       }
+       else
+       {
+            elapsedTime += Time.deltaTime * speed;
+            if(usePingPong)
+            {
+                currentT = Mathf.PingPong(elapsedTime, 1f);
+            }
+            else
+            {
+                currentT = Mathf.Repeat(elapsedTime, 1f);
+            }
+       }
 
-        UpdateUI();
+       currentPosition =  EvaluateBezier(currentT);
+        transform.position = currentPosition;
+
+
+            UpdateUI();
     }
 
     private Vector3 EvaluateBezier(float t)
     {
         // TODO
-        return Vector3.zero;
+        return curveType switch
+        {
+            BezierType.Linear => LinearBezier(p0, p3, t),
+            BezierType.Quadratic => QuadraticBezier(p0, p1, p2, t),
+            BezierType.Cubic => CubicBezier(p0, p1, p2, p3, t),
+            _=> p0
+        };
     }
 
     private Vector3 LinearBezier(Vector3 p0, Vector3 p1, float t)
     {
         // TODO
-        return Vector3.zero;
+        return (1f - t) * p0 + t * p1;  // = Vector3.Lerp(p0, p1, t)
+        
     }
 
     private Vector3 QuadraticBezier(Vector3 p0, Vector3 p1, Vector3 p2, float t)
     {
         // TODO
-        return Vector3.zero;
+        Vector3 a = Vector3.Lerp(p0, p1, t);
+        Vector3 b = Vector3.Lerp(p1, p2, t);
+        return Vector3.Lerp(a, b, t);
     }
 
     private Vector3 CubicBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
         // TODO
-        return Vector3.zero;
+        Vector3 a = Vector3.Lerp(p0, p1, t);
+        Vector3 b = Vector3.Lerp(p1, p2, t);
+        Vector3 c = Vector3.Lerp(p2, p3, t);
+
+        Vector3 d = Vector3.Lerp(a, b, t);
+        Vector3 e = Vector3.Lerp(b, c, t);
+
+        return Vector3.Lerp(d, e, t);
     }
 
     private void OnDrawGizmos()

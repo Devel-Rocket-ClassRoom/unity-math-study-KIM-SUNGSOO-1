@@ -34,9 +34,47 @@ public class Assignment_SplineConveyor : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+        if (waypoints == null || waypoints.Length < 2) return;
+        if (boxes == null || boxes.Length == 0) return;
 
-        UpdateUI();
+        
+        currentSpeedMultiplier = speedCurve.Evaluate(globalT);
+
+        
+        globalT += (Time.deltaTime / cycleDuration) * currentSpeedMultiplier;
+        globalT = Mathf.Repeat(globalT, 1f);
+
+
+        for (int i = 0; i < boxes.Length; i++)
+        {
+            if (boxes[i] == null) continue;
+
+
+            float offset = i / (float)boxes.Length;
+
+            float t = globalT + offset;
+            t = Mathf.Repeat(t, 1f);
+
+
+            Vector3 pos = EvaluateSpline(waypoints, t);
+
+
+            float nextT = Mathf.Repeat(t + 0.01f, 1f);
+            Vector3 nextPos = EvaluateSpline(waypoints, nextT);
+
+            Vector3 dir = (nextPos - pos).normalized;
+
+
+            boxes[i].position = pos;
+
+
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                boxes[i].rotation = Quaternion.LookRotation(dir);
+            }
+        }
+
+    UpdateUI();
     }
 
     private Vector3 EvaluateSpline(Transform[] pts, float t)
