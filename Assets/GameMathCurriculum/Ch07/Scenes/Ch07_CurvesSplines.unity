@@ -296,10 +296,20 @@ MonoBehaviour:
   spherePrefab: {fileID: 6076771065933843118, guid: d3180d99918bfb1418d99c5f7bb0baf5, type: 3}
   startPoint: {fileID: 99511016}
   endPoint: {fileID: 1674750343}
-  spawnCount: 5
+  controlPointRange: 5
   minDuration: 2
   maxDuration: 5
-  randomRange: 5
+  materials:
+  - {fileID: 2100000, guid: 109f14eba73eaed4ea8252cf21271b3c, type: 2}
+  - {fileID: 2100000, guid: 4847f4dee2c1ec34b984707808b5b66e, type: 2}
+  - {fileID: 2100000, guid: 91c32a41006947b4c8a3950cfe04e2ba, type: 2}
+  - {fileID: 2100000, guid: 9c6dac0f1ea95594fa59e4df31709b58, type: 2}
+  - {fileID: 2100000, guid: ed4cc5625a217e44d9c244bc39c9086c, type: 2}
+  - {fileID: 2100000, guid: 9c74a222f8071b24d9688018ca44160d, type: 2}
+  - {fileID: 2100000, guid: 8f4d236ffd4494d4da6dcffbfa0eef14, type: 2}
+  - {fileID: 2100000, guid: 73237518e87c233459ad69eeef8321a9, type: 2}
+  - {fileID: 2100000, guid: 511831ee59081c64187baaf09fbd94fa, type: 2}
+  - {fileID: 2100000, guid: 4fbd837b98ce5c04a98931db0d77f76d, type: 2}
 --- !u!1 &362152461
 GameObject:
   m_ObjectHideFlags: 0
