@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class TargetIndicator : MonoBehaviour
 {
     public Transform[] targets;          // 타겟들
-    public GameObject indicatorPrefab;   // UI 프리팹 (Pivot 0,0)
+    public GameObject indicatorPrefab;   // UI 프리팹 
     public Canvas canvas;                // 캔버스
 
     private List<GameObject> indicators = new List<GameObject>();
@@ -43,13 +43,8 @@ public class TargetIndicator : MonoBehaviour
             // 월드 좌표 → 스크린 좌표
             Vector3 screenPos = cam.WorldToScreenPoint(target.position);
 
-            // 뒤쪽이면 반전
-            if (screenPos.z < 0)
-            {
-                screenPos.x = Screen.width - screenPos.x;
-                screenPos.y = Screen.height - screenPos.y;
-                screenPos.z = Mathf.Abs(screenPos.z);
-            }
+            
+            
 
             // 화면 안이면 숨김
             bool isOnScreen = screenPos.x >= 0 && screenPos.x <= Screen.width &&
@@ -57,11 +52,14 @@ public class TargetIndicator : MonoBehaviour
             indicator.SetActive(!isOnScreen);
             if (!indicator.activeSelf) continue;
 
-            float halfW = rect.rect.width / 2f;
-            float halfH = rect.rect.height / 2f;
+            Vector3 local = cam.transform.InverseTransformPoint(targets[i].position);
+            Vector2 dir = new Vector2(local.x, local.y);
+            Vector2 center = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+            float scale = Screen.width;
+            Vector2 pos = center + dir*scale;
 
-            float clampedX = Mathf.Clamp(screenPos.x, halfW, Screen.width - halfW);
-            float clampedY = Mathf.Clamp(screenPos.y, halfH, Screen.height - halfH);
+            pos.x = Mathf.Clamp(pos.x, 0f, Screen.width);
+            pos.y = Mathf.Clamp(pos.y, 0f, Screen.height);
 
             // Canvas 모드에 따라 카메라 설정
             Camera uiCam = canvas.renderMode == RenderMode.ScreenSpaceCamera ? cam : null;
@@ -70,12 +68,12 @@ public class TargetIndicator : MonoBehaviour
             Vector2 localPoint;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect,
-                new Vector2(clampedX, clampedY),
+                new Vector2(pos.x, pos.y),
                 uiCam,
                 out localPoint
             );
 
-            rect.localPosition = localPoint;
+            rect.localPosition = localPoint; 
         }
     }
 }
